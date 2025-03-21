@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.dailycodeworks.dream_shop.entity.Product;
 import com.dailycodeworks.dream_shop.request.AddProductRequest;
+import com.dailycodeworks.dream_shop.request.UpdateProductRequest;
 
 public interface IProductService {
 	public Product addProduct(AddProductRequest request);
 	public Product getProductById(Long id);
-	public void updateProduct(Product product, Long productId);
+	
 	public void deleteProduct(Long id);
 	public List<Product> getAllProducts();
 	public List<Product> getProductsByCategory(String category);
@@ -17,4 +18,5 @@ public interface IProductService {
 	public List<Product> getProductByName( String name);
 	public List<Product> getProductByBrandAndName(String brand, String name);
 	public Long countProductsByBrandAndName(String brand, String name);
+	Product updateProduct(UpdateProductRequest product, Long productId);
 }

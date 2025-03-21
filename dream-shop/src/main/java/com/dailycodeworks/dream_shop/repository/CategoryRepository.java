@@ -12,4 +12,6 @@ import com.dailycodeworks.dream_shop.entity.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	public Category findByName(String name);
 
+	public boolean existsByName(String name);
+
 }

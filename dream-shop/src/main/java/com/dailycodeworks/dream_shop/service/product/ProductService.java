@@ -13,6 +13,7 @@ import com.dailycodeworks.dream_shop.exceptions.ProductNotFoundException;
 import com.dailycodeworks.dream_shop.repository.CategoryRepository;
 import com.dailycodeworks.dream_shop.repository.ProductRepository;
 import com.dailycodeworks.dream_shop.request.AddProductRequest;
+import com.dailycodeworks.dream_shop.request.UpdateProductRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,12 @@ public class ProductService implements IProductService {
 		// Then set it as new product's category.
 		Category category = Optional.ofNullable(categoryRepository.findByName(
 				request.getCategory().getName()
-		)).orElse(null);
-		return null;
+		)).orElseGet(() ->{ 
+			Category  newCategory = new Category(request.getCategory().getName());
+			return categoryRepository.save(newCategory);
+		});
+		request.setCategory(category);
+		return createProduct(request, category);
 	}
 
 //	helper method to add product
@@ -57,9 +62,26 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public void updateProduct(Product product, Long productId) {
+	public Product updateProduct(UpdateProductRequest request, Long productId) {
 		// TODO Auto-generated method stub
+		return productRepository.findById(productId)
+				.map(existingProduct -> updateExistingProduct(existingProduct, request))
+				.map(productRepository::save).orElseThrow(()-> new ProductNotFoundException("Product Not found!"));
 		
+		
+	}
+	
+	
+	private Product updateExistingProduct(Product existingProduct, UpdateProductRequest request) {
+		existingProduct.setName(request.getName());
+		existingProduct.setBrand(request.getBrand());
+		existingProduct.setDescription(request.getDescription());
+		existingProduct.setInventory(request.getInventory());
+		existingProduct.setPrice(request.getPrice());
+		
+		Category category = categoryRepository.findByName(request.getCategory().getName());
+		existingProduct.setCategory(category);
+		return existingProduct;
 	}
 
 	@Override

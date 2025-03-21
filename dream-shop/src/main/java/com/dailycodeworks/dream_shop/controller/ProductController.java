@@ -1,4 +1,4 @@
-package com.dailycodeworks.dream_shop.service.category;
+package com.dailycodeworks.dream_shop.controller;
 
 import java.util.List;
 
