@@ -2,6 +2,7 @@ package com.dailycodeworks.dream_shop.service.product;
 
 import java.util.List;
 
+import com.dailycodeworks.dream_shop.dto.ProductDto;
 import com.dailycodeworks.dream_shop.entity.Product;
 import com.dailycodeworks.dream_shop.request.AddProductRequest;
 import com.dailycodeworks.dream_shop.request.UpdateProductRequest;
@@ -19,5 +20,7 @@ public interface IProductService {
 	public List<Product> getProductByBrandAndName(String brand, String name);
 	public Long countProductsByBrandAndName(String brand, String name);
 	Product updateProduct(UpdateProductRequest product, Long productId);
+	ProductDto convertToProductDto(Product product);
+	List<ProductDto> getConvertedProducts(List<Product> products);
 
 }

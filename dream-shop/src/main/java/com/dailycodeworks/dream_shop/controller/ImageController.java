@@ -28,7 +28,7 @@ import com.dailycodeworks.dream_shop.exceptions.ResourceNotFoundException;
 import com.dailycodeworks.dream_shop.response.ApiResponse;
 import com.dailycodeworks.dream_shop.service.image.ImageService;
 
-import jakarta.annotation.Resource;
+import org.springframework.core.io.Resource;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 
@@ -42,20 +42,20 @@ public class ImageController {
 
 	
 	@PostMapping("/upload")
-	public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId){
+	public ResponseEntity<ApiResponse> saveImages(@RequestBody List<MultipartFile> files, @RequestParam Long productId){
 		try{
 			List<ImageDto> imageDtos = imageService.saveImages(files, productId);
 			return ResponseEntity.ok(new ApiResponse("upload Success", imageDtos));
 		}catch (Exception e) {
-			
-			return ResponseEntity
+			e.printStackTrace();
+				return ResponseEntity
 					.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse("upload Failed", e.getMessage()));
 		}
 	}
 	
-	@GetMapping("/image/download/{imageId}")
-    public ResponseEntity<ByteArrayResource> downloadImage(@PathVariable Long imageId) throws SQLException {
+	@GetMapping("/download/{imageId}")
+    public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
         ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
         return  ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
@@ -64,7 +64,7 @@ public class ImageController {
     }
 	
 	
-	@PostMapping("/image/{imageId}/update")
+	@PostMapping("/{imageId}/update")
 	public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file){
 		try {
 			Image image = imageService.getImageById(imageId);
@@ -80,7 +80,7 @@ public class ImageController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Update failed!", HttpStatus.INTERNAL_SERVER_ERROR));
 	}
 	
-	@DeleteMapping("/image/{imageId}/delete")
+	@DeleteMapping("/{imageId}/delete")
 	public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId){
 		try {
 			Image image = imageService.getImageById(imageId);

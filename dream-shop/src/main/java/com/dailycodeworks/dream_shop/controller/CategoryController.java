@@ -29,7 +29,7 @@ public class CategoryController {
 	@Autowired
 	private final ICategoryService categoryService;
 
-	@GetMapping("/all")
+	@GetMapping("/")
 	public ResponseEntity<ApiResponse> getAllCategories(){
 		try {
 			List<Category> categories = categoryService.getAllCategories();
@@ -42,7 +42,7 @@ public class CategoryController {
 		
 	}
 	
-	@PostMapping("/add")
+	@PostMapping("/")
 	public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name){
 		try {
 			Category theCategory = categoryService.addCategory(name); 
@@ -52,18 +52,6 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
 		}
 		
-		
-	}
-	
-	@GetMapping("/byId/{id}")
-	public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id){
-		try {
-			Category category = categoryService.getCategoryById(id);
-			return ResponseEntity.ok(new ApiResponse("success", category));
-		}catch(ResourceNotFoundException e)
-		{
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
-		}
 		
 	}
 	
@@ -77,6 +65,20 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
 		}
 	}
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id){
+		try {
+			Category category = categoryService.getCategoryById(id);
+			return ResponseEntity.ok(new ApiResponse("success", category));
+		}catch(ResourceNotFoundException e)
+		{
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
+		}
+		
+	}
+	
 	
 	
 	@DeleteMapping("/{id}")

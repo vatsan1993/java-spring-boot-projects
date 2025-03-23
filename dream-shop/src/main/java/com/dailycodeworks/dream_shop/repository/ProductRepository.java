@@ -11,10 +11,10 @@ import com.dailycodeworks.dream_shop.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	List<Product> findByCategoryName(String category);
-	List<Product> findByBrandName(String brand);
+	List<Product> findByBrand(String brand);
 	List<Product> findByCategoryNameAndBrand(String category, String brand);
 	List<Product> findByName(String name);
 	List<Product> findByBrandAndName(String beand, String name);
-	Long countProductsByBrandAndName(String brand, String name);
+	Long countByBrandAndName(String brand, String name);
 
 }

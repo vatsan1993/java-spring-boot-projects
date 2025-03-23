@@ -1,16 +1,23 @@
 package com.dailycodeworks.dream_shop.service.product;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dailycodeworks.dream_shop.dto.ImageDto;
+import com.dailycodeworks.dream_shop.dto.ProductDto;
 import com.dailycodeworks.dream_shop.entity.Category;
+import com.dailycodeworks.dream_shop.entity.Image;
 import com.dailycodeworks.dream_shop.entity.Product;
 import com.dailycodeworks.dream_shop.exceptions.ProductNotFoundException;
 import com.dailycodeworks.dream_shop.repository.CategoryRepository;
+import com.dailycodeworks.dream_shop.repository.ImageRepository;
 import com.dailycodeworks.dream_shop.repository.ProductRepository;
 import com.dailycodeworks.dream_shop.request.AddProductRequest;
 import com.dailycodeworks.dream_shop.request.UpdateProductRequest;
@@ -23,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 public class ProductService implements IProductService {
 	private final ProductRepository productRepository;
 	private final CategoryRepository categoryRepository;
+	private final ImageRepository imageRepository;
+	//Used to Map an entity to a model/dto
+	private final ModelMapper modelMapper;
 	
 	@Override
 	public Product addProduct(AddProductRequest request) {
@@ -37,7 +47,8 @@ public class ProductService implements IProductService {
 			return categoryRepository.save(newCategory);
 		});
 		request.setCategory(category);
-		return createProduct(request, category);
+		Product theProduct = createProduct(request, category);
+		return productRepository.save(theProduct);
 	}
 
 //	helper method to add product
@@ -103,7 +114,7 @@ public class ProductService implements IProductService {
 	@Override
 	public List<Product> getProductsByBrand(String brand) {
 		// TODO Auto-generated method stub
-		return productRepository.findByBrandName(brand);
+		return productRepository.findByBrand(brand);
 	}
 
 	@Override
@@ -127,7 +138,24 @@ public class ProductService implements IProductService {
 	@Override
 	public Long countProductsByBrandAndName(String brand, String name) {
 		// TODO Auto-generated method stub
-		return productRepository.countProductsByBrandAndName(brand, name);
+		return productRepository.countByBrandAndName(brand, name);
+	}
+	
+	@Override
+	public List<ProductDto> getConvertedProducts(List<Product> products) {
+		return products.stream().map(this::convertToProductDto).toList();
+	}
+
+	
+	@Override
+	public ProductDto convertToProductDto(Product product) {
+		ProductDto productDto = modelMapper.map(product, ProductDto.class);
+		List<Image> images = imageRepository.findByProductId(product.getId());
+		List<ImageDto> imagesDtos = images.stream()
+				.map(image -> modelMapper.map(image, ImageDto.class))
+				.toList();
+		productDto.setImages(imagesDtos);
+		return productDto;
 	}
 
 }

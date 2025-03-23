@@ -52,6 +52,7 @@ public class ImageService implements IImageService {
 
 	@Override
 	public List<ImageDto> saveImages(List<MultipartFile> files, Long productId) {
+		System.out.println(productId);
 		Product product = productService.getProductById(productId);
 		List<ImageDto> imageDtos = new ArrayList<>();
 		for(MultipartFile file : files) {
@@ -73,7 +74,7 @@ public class ImageService implements IImageService {
 				ImageDto imageDto = new ImageDto();
 				imageDto.setImageId(savedImage.getId());
 				imageDto.setImageName(savedImage.getFileName());
-				imageDto.setImageUrl(imageDto.getImageUrl());
+				imageDto.setImageUrl(savedImage.getDownloadUrl());
 				imageDtos.add(imageDto);
 				
 			}catch(IOException | SQLException e){
