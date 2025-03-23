@@ -52,8 +52,6 @@ public class ProductService implements IProductService {
 		);
 	}
 	
-	
-	
 	@Override
 	public Product getProductById(Long id) {
 		// TODO Auto-generated method stub
@@ -67,10 +65,7 @@ public class ProductService implements IProductService {
 		return productRepository.findById(productId)
 				.map(existingProduct -> updateExistingProduct(existingProduct, request))
 				.map(productRepository::save).orElseThrow(()-> new ProductNotFoundException("Product Not found!"));
-		
-		
 	}
-	
 	
 	private Product updateExistingProduct(Product existingProduct, UpdateProductRequest request) {
 		existingProduct.setName(request.getName());
@@ -118,7 +113,7 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public List<Product> getProductByName(String name) {
+	public List<Product> getProductsByName(String name) {
 		// TODO Auto-generated method stub
 		return productRepository.findByName(name);
 	}
