@@ -1,6 +1,8 @@
 package com.dailycodeworks.dream_shop.service.image;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class ImageService implements IImageService {
 				imageDto.setImageUrl(imageDto.getImageUrl());
 				imageDtos.add(imageDto);
 				
-			}catch(Exception e){
+			}catch(IOException | SQLException e){
 				throw new RuntimeException(e.getMessage());
 			}
 		}
@@ -91,8 +93,8 @@ public class ImageService implements IImageService {
 			image.setImage(new SerialBlob(file.getBytes()));
 			imageRepository.save(image);
 			
-		}catch(Exception e) {
-			throw new RuntimeException(e);
+		}catch(IOException | SQLException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 		
 	}

@@ -16,13 +16,10 @@ import com.dailycodeworks.dream_shop.service.product.IProductService;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductRepository productRepository;
 	@Autowired
 	IProductService productService;
 
-    ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+
 	
 	public ResponseEntity<List<Product>> getAllProducts(){
 		return new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
