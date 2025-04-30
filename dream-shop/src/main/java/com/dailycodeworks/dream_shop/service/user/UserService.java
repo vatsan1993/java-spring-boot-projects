@@ -3,6 +3,9 @@ package com.dailycodeworks.dream_shop.service.user;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dailycodeworks.dream_shop.dto.UserDto;
@@ -23,6 +26,8 @@ public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
 	private final ModelMapper modelMapper;
+	// used to encode password using the bean we created;
+	private final PasswordEncoder passwordEncoder;
 
  
 	
@@ -41,7 +46,8 @@ public class UserService implements IUserService {
 				.map(req ->{
 					User user = new User();
 					user.setEmail(req.getEmail());
-					user.setPassword(req.getPassword());
+					// encoding password
+					user.setPassword(passwordEncoder.encode(req.getPassword()));
 					user.setFirstName(req.getFirstName());
 					user.setLastName(req.getLastName());
 					return userRepository.save(user);
@@ -72,5 +78,13 @@ public class UserService implements IUserService {
 	@Override
 	public UserDto convertUserToDto(User user) {
 		return modelMapper.map(user, UserDto.class);
+	}
+
+	@Override
+	public User getAuthenticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		
+		return userRepository.findByEmail(email);
 	}
 }

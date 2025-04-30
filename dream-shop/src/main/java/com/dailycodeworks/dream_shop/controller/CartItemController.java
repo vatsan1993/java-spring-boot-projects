@@ -23,6 +23,7 @@ import com.dailycodeworks.dream_shop.service.cartItem.CartItemService;
 import com.dailycodeworks.dream_shop.service.cartItem.ICartItemService;
 import com.dailycodeworks.dream_shop.service.user.IUserService;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +42,9 @@ public class CartItemController {
 	                                                     @RequestParam Integer quantity) {
 	        try {
 	        	// Will be changed later
-	            User user = userService.getUserById(4L);
+//	            User user = userService.getUserById(4L);
+	        	// instead of getting a user directly, we will create a different method
+	            User user = userService.getAuthenticatedUser();
 	            Cart cart = cartService.initializeNewCart(user);
 	        	
 	        	
@@ -49,6 +52,9 @@ public class CartItemController {
 	            return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
 	        } catch (ResourceNotFoundException e) {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+	        }catch(JwtException e) {
+	        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
+	        	
 	        }
 	    }
 

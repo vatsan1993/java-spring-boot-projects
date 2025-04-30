@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.awt.datatransfer.Transferable;
 import java.util.List;
 
 import com.dailycodeworks.dream_shop.security.jwt.AuthTokenFilter;
@@ -32,8 +33,9 @@ import com.dailycodeworks.dream_shop.security.user.ShopUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // enables web security
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true) // enables method level security
 public class ShopConfig {
 	private final ShopUserDetailsService userDetailsService;
 	private final JwtAuthEntryPoint authEntryPoint;
