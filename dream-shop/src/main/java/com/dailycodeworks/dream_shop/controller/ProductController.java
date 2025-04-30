@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dailycodeworks.dream_shop.dto.ProductDto;
 import com.dailycodeworks.dream_shop.entity.Product;
+import com.dailycodeworks.dream_shop.exceptions.AlreadyExistsException;
 import com.dailycodeworks.dream_shop.exceptions.ResourceNotFoundException;
 import com.dailycodeworks.dream_shop.repository.ProductRepository;
 import com.dailycodeworks.dream_shop.request.AddProductRequest;
@@ -64,8 +65,8 @@ public class ProductController {
 			Product product = productService.addProduct(request);
 			ProductDto productDto = productService.convertToProductDto(product);
 			return  ResponseEntity.ok(new ApiResponse("New Product Added", productDto ));
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		}catch(AlreadyExistsException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
 					.body(new ApiResponse(e.getMessage(), null));
 		}
 	}

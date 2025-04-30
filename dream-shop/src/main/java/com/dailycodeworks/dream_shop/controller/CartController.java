@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class CartController {
 	private final ICartService cartService;	
 	
-	@GetMapping("/{id}")
+	@GetMapping("/{cartId}")
 	public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId){
 		try {
 			Cart cart = cartService.getCart(cartId);
@@ -34,7 +34,7 @@ public class CartController {
 	}
 	
 	
-	@GetMapping("/{id}/clear")
+	@GetMapping("/{cartId}/clear")
 	public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId){
 		try {
 			cartService.clearCart(cartId);
@@ -44,7 +44,7 @@ public class CartController {
 					.body(new ApiResponse(e.getMessage(), null));
 		}
 	}
-	@GetMapping("/{id}/total-price")
+	@GetMapping("/{cartId}/total-price")
 	public ResponseEntity<ApiResponse> totalPrice(@PathVariable Long cartId){
 		try {
 			BigDecimal totalPrice =cartService.getTotalPrice(cartId);
