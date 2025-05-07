@@ -82,6 +82,17 @@ public class ShopConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
+		// applying cors on all 
+		 http
+	        .cors(cors -> cors.configurationSource(request -> {
+	            var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+	            corsConfig.setAllowedOrigins(List.of("http://localhost:5173"));
+	            corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	            corsConfig.setAllowedHeaders(List.of("*"));
+	            corsConfig.setAllowCredentials(true);
+	            return corsConfig;
+	        }));
+		
 		// handling cross site request forgery.
 
         http.csrf(AbstractHttpConfigurer::disable) // disable csrf    
