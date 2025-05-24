@@ -51,8 +51,10 @@ public class CartItemController {
 	            cartItemService.addItemToCart(cart.getId(), productId, quantity);
 	            return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
 	        } catch (ResourceNotFoundException e) {
+	        	System.out.println("Resource not found Error");
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
 	        }catch(JwtException e) {
+	        	System.out.println("JWT Exception");
 	        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
 	        	
 	        }
